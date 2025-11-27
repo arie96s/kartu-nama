@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ========= SEO & SHARING META TAG ========= -->
+<title>Digital Business Card</title>
+<meta name="description" content="Personal digital business card">
+<meta name="keywords" content="kartu nama digital, personal website, portfolio online, resume online">
+<meta property="og:title" content="Digital Business Card">
+<meta property="og:description" content="Online personal business card & portfolio">
+<meta property="og:image" content="https://via.placeholder.com/600x400.png">
+<meta property="og:url" content="">
+<meta name="twitter:card" content="summary_large_image">
+
+<!-- ========= External Lib For PDF ========= -->
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+
+<style>
+/* ================= ROOT THEME ================= */
+:root {
+  --bg: #f9fafb;
+  --card: #ffffff;
+  --text: #111827;
+  --subtext: #6b7280;
+  --accent: #2563eb;
+}
+
+[data-theme="dark"] {
+  --bg: #0f172a;
+  --card: #111827;
+  --text: #f9fafb;
+  --subtext: #94a3b8;
+  --accent: #60a5fa;
+}
+
+/* ================= GLOBAL ================= */
+body {
+  font-family: Inter, Arial, sans-serif;
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  transition: background 0.3s, color 0.3s;
+}
+
+.container {
+  max-width: 960px;
+  margin: auto;
+  padding: 1.5rem;
+}
+
+/* ================= PROFILE ================= */
+.profile {
+  text-align: center;
+  background: var(--card);
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.profile img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 1rem;
+}
+
+.profile h1 {
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.profile h2 {
+  margin: 0.3rem 0;
+  font-weight: normal;
+  color: var(--subtext);
+}
+
+.profile p {
+  max-width: 540px;
+  margin: 1rem auto 0;
+}
+
+/* ================= BUTTON ================= */
+.buttons {
+  margin-top: 1.2rem;
+  display: flex;
+  justify-content: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+button, .btn-link {
+  background: var(--accent);
+  color: white;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+
+button:hover, .btn-link:hover {
+  opacity: 0.9;
+}
+
+/* ================= SOCIAL ================= */
+.socials {
+  margin-top: 1rem;
+}
+
+.socials a {
+  margin: 0 0.4rem;
+  text-decoration: none;
+  color: var(--accent);
+  font-size: 1.2rem;
+}
+
+/* ================= PORTFOLIO ================= */
+.portfolio {
+  margin-top: 2rem;
+}
+
+.portfolio-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+}
+
+.card {
+  background: var(--card);
+  padding: 0.8rem;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+.card img {
+  width: 100%;
+  border-radius: 8px;
+}
+
+/* ================= MODAL ================= */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: var(--card);
+  padding: 1rem;
+  max-width: 500px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.modal-content img {
+  width: 100%;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+}
+
+.close {
+  float: right;
+  cursor: pointer;
+}
+
+/* ================= QR SECTION ================= */
+.qr-section {
+  text-align: center;
+  margin: 3rem 0 1rem;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width:600px) {
+  .profile {
+    padding: 1.5rem 1rem;
+  }
+}
+</style>
+</head>
+<body>
+
+<script>
+/* ================= CONFIG (EDIT HERE ONLY) ================= */
+const CONFIG = {
+  name: "Fajri Salam",
+  title: "Graphic Designer & Clothing Brand Owner",
+  photo: "https://www.instagram.com/p/DOls5QYAWIj/?igsh=MWRpZWxhaDN4a2dxaQ==",
+  bio: {
+    id: "Desainer grafis fokus ke typography dan streetwear branding.",
+    en: "Graphic designer focused on typography and streetwear branding."
+  },
+  social: {
+    email: "fajrisalam96@gmail.com",
+    whatsapp: "https://wa.me/6282283687565",
+    instagram: "https://instagram.com/arie96s",
+    linkedin: "https://linkedin.com/in/fajrisalam",
+    github: "https://github.com/username"
+  },
+  portfolio: [
+    { title:"PROJECT I", image:"https://drive.google.com/file/d/1bYv3KBT2EXWVEegR4XuTncRgLvysICNd/view?usp=drivesdk", description:"Desain logo clothing brand." },
+    { title:"PROJECT II", image:"https://drive.google.com/file/d/1uhvwWoRHtOtqJWw4J7NSMNeaTQnLdV3t/view?usp=drivesdk", description:"Artwork poster event." }
+  ],
+  cvUrl: "https://drive.google.com/file/d/18U4iGVSuB59TQyC0LazoZ1ptZaOXzjg4/view?usp=drivesdk"
+};
+</script>
+
+<div class="container">
+
+  <!-- ================= PROFILE ================= -->
+  <div class="profile">
+    <img id="profilePhoto">
+    <h1 id="name"></h1>
+    <h2 id="title"></h2>
+    <p id="bio"></p>
+
+    <div class="buttons">
+      <button onclick="downloadCV()">Download CV</button>
+      <button onclick="toggleTheme()">Light/Dark</button>
+    </div>
+
+    <div class="socials" id="socialLinks"></div>
+  </div>
+
+  <!-- ================= PORTFOLIO ================= -->
+  <section class="portfolio">
+    <h2>Portfolio</h2>
+    <div class="portfolio-grid" id="portfolioGrid"></div>
+  </section>
+
+  <!-- ================= QR ================= -->
+  <div class="qr-section">
+    <h3>QR Code</h3>
+    <canvas id="qrCanvas"></canvas><br>
+    <button onclick="downloadQR()">Download QR</button>
+  </div>
+
+</div>
+
+<!-- ================= MODAL ================= -->
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">❌</span>
+    <img id="modalImg">
+    <h3 id="modalTitle"></h3>
+    <p id="modalDesc"></p>
+  </div>
+</div>
+
+<script>
+/* ============ AUTO LANGUAGE ============ */
+const lang = navigator.language.includes("id") ? "id" : "en";
+
+/* ============ FILL CONTENT ============ */
+document.getElementById("profilePhoto").src = CONFIG.photo;
+document.getElementById("name").innerText = CONFIG.name;
+document.getElementById("title").innerText = CONFIG.title;
+document.getElementById("bio").innerText = CONFIG.bio[lang];
+
+/* ============ SOCIAL LINKS ============ */
+const socialMap = {
+ email:"📧", whatsapp:"💬", instagram:"📷", linkedin:"💼", github:"🐙"
+};
+
+let socialHTML = "";
+for(let key in CONFIG.social){
+  if(CONFIG.social[key])
+    socialHTML += `<a href="${CONFIG.social[key]}" target="_blank">${socialMap[key]}</a>`;
+}
+document.getElementById("socialLinks").innerHTML = socialHTML;
+
+/* ============ PORTFOLIO ============ */
+const grid = document.getElementById("portfolioGrid");
+CONFIG.portfolio.forEach(item=>{
+  const card = document.createElement("div");
+  card.className = "card";
+  card.innerHTML = `
+    <img src="${item.image}">
+    <h4>${item.title}</h4>
+  `;
+  card.onclick = ()=> openModal(item);
+  grid.appendChild(card);
+});
+
+/* ============ MODAL ============ */
+function openModal(item){
+  document.getElementById("modalImg").src = item.image;
+  document.getElementById("modalTitle").innerText = item.title;
+  document.getElementById("modalDesc").innerText = item.description;
+  document.getElementById("modal").style.display="flex";
+}
+function closeModal(){
+  document.getElementById("modal").style.display="none";
+}
+
+/* ============ THEME ============ */
+if(window.matchMedia('(prefers-color-scheme: dark)').matches){
+  document.documentElement.setAttribute("data-theme", "dark");
+}
+function toggleTheme(){
+  const current = document.documentElement.getAttribute("data-theme");
+  document.documentElement.setAttribute("data-theme", current==="dark" ? "" : "dark");
+}
+
+/* ============ PDF CV GENERATOR ============ */
+function downloadCV(){
+  if(CONFIG.cvUrl){
+    window.open(CONFIG.cvUrl);
+    return;
+  }
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF();
+
+  pdf.text(CONFIG.name, 20, 20);
+  pdf.text(CONFIG.title, 20, 30);
+  pdf.text(CONFIG.bio[lang], 20, 40);
+
+  pdf.save("CV-"+CONFIG.name+".pdf");
+}
+
+/* ============ QR CODE GENERATOR ============ */
+const canvas = document.getElementById("qrCanvas");
+const ctx = canvas.getContext("2d");
+canvas.width = 200;
+canvas.height = 200;
+
+function generateQR(){
+  const url = window.location.href;
+  const qrApi = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data="+encodeURIComponent(url);
+  const img = new Image();
+  img.onload = ()=> ctx.drawImage(img, 0, 0);
+  img.src = qrApi;
+}
+generateQR();
+
+function downloadQR(){
+  const link = document.createElement("a");
+  link.download = "QR-Card.png";
+  link.href = canvas.toDataURL();
+  link.click();
+}
+</script>
+
+</body>
+</html>
